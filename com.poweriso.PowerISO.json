@@ -5,6 +5,7 @@
     "sdk": "org.freedesktop.Sdk",
     "command": "poweriso-gui",
     "finish-args": [
+        "--allow=multiarch",
         "--device=all",
         /* Only supports X11 with the builtin Qt */
         "--socket=x11",
