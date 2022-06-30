@@ -8,6 +8,7 @@
         "--allow=multiarch",
         "--device=all",
         /* Only supports X11 with the builtin Qt */
+        "--env=QT_QPA_PLATFORM_PLUGIN_PATH=/app/lib",
         "--socket=x11",
         "--filesystem=home"
     ],
@@ -19,7 +20,7 @@
                 "mkdir /app/lib/",
                 "cp -r ./gui/ /app/lib/poweriso/",
                 "mkdir -p /app/bin/",
-                "install -m755 launcher.sh /app/bin/poweriso-gui",
+                "ln -s ${FLATPAK_DEST}/lib/poweriso/poweriso ${FLATPAK_DEST}/bin/poweriso-gui",
                 "install -m755 cli/poweriso /app/bin/poweriso",
                 "install -Dm644 com.poweriso.PowerISO.png /app/share/icons/com.poweriso.PowerISO.png",
                 "install -Dm644 com.poweriso.PowerISO.desktop /app/share/applications/com.poweriso.PowerISO.desktop",
@@ -50,10 +51,6 @@
                 {
                     "type": "file",
                     "path": "com.poweriso.PowerISO.desktop"
-                },
-                {
-                    "type": "file",
-                    "path": "launcher.sh"
                 }
             ]
         }
