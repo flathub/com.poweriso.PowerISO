@@ -43,9 +43,9 @@
                 "mkdir -p /app/bin/",
                 "ln -s ${FLATPAK_DEST}/lib/poweriso/poweriso ${FLATPAK_DEST}/bin/poweriso-gui",
                 "install -m755 cli/poweriso /app/bin/poweriso",
-                "install -Dm644 com.poweriso.PowerISO.png /app/share/icons/com.poweriso.PowerISO.png",
-                "install -Dm644 com.poweriso.PowerISO.desktop /app/share/applications/com.poweriso.PowerISO.desktop",
-                "install -Dm644 com.poweriso.PowerISO.metainfo.xml /app/share/metainfo/com.poweriso.PowerISO.metainfo.xml"
+                "install -Dm644 ${FLATPAK_ID}.png -t ${FLATPAK_DEST}/share/icons/",
+                "install -Dm644 ${FLATPAK_ID}.desktop -t ${FLATPAK_DEST}/share/applications/",
+                "install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/"
             ],
             "sources": [
                 {
