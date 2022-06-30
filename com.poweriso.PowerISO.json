@@ -9,6 +9,7 @@
         "--device=all",
         /* Only supports X11 with the builtin Qt */
         "--env=QT_QPA_PLATFORM_PLUGIN_PATH=/app/lib",
+        "--unset-env=QT_QPA_PLATFORM",
         "--socket=x11",
         "--filesystem=home"
     ],
