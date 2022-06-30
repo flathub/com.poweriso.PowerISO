@@ -15,9 +15,29 @@
     ],
     "modules": [
         {
+            "name": "patchelf",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/NixOS/patchelf/archive/0.14.3.tar.gz",
+                    "sha256": "827a8ca914c69413f1ca0d967a637980a24edf000a938531a77e663317c853bb",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 2598,
+                        "stable-only": true,
+                        "url-template": "https://github.com/NixOS/patchelf/archive/$version.tar.gz"
+                    }
+                }
+            ],
+            "cleanup": [
+                "*"
+            ]
+        },
+        {
             "name": "poweriso",
             "buildsystem": "simple",
             "build-commands": [
+                "patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 gui/poweriso",
                 "mkdir -p /app/lib/",
                 "cp -r ./gui/ /app/lib/poweriso/",
                 "mkdir -p /app/bin/",
