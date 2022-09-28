@@ -18,7 +18,7 @@
             "name": "poweriso",
             "buildsystem": "simple",
             "build-commands": [
-                "mkdir /app/lib/",
+                "mkdir -p /app/lib/",
                 "cp -r ./gui/ /app/lib/poweriso/",
                 "mkdir -p /app/bin/",
                 "ln -s ${FLATPAK_DEST}/lib/poweriso/poweriso ${FLATPAK_DEST}/bin/poweriso-gui",
