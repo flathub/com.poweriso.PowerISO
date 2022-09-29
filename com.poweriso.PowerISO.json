@@ -1,43 +1,168 @@
 {
     "app-id": "com.poweriso.PowerISO",
     "runtime": "org.freedesktop.Platform",
-    "runtime-version": "20.08",
+    "runtime-version": "22.08",
     "sdk": "org.freedesktop.Sdk",
     "command": "poweriso-gui",
     "finish-args": [
         "--allow=multiarch",
         "--device=all",
         /* Only supports X11 with the builtin Qt */
+        "--env=QT_QPA_PLATFORM_PLUGIN_PATH=/app/lib",
+        "--unset-env=QT_QPA_PLATFORM",
         "--socket=x11",
         "--filesystem=home"
     ],
+    "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "*.a",
+        "*.la"
+    ],
     "modules": [
+        {
+            "name": "icu",
+            "subdir": "source",
+            "config-opts": [
+                "--sbindir=${FLATPAK_DEST}/bin",
+                "--disable-extras",
+                "--disable-icuio",
+                "--disable-layout",
+                "--disable-layoutx",
+                "--disable-tests",
+                "--disable-samples"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/unicode-org/icu/releases/download/release-56-1/icu4c-56_1-src.tgz",
+                    "sha256": "3a64e9105c734dcf631c0b3ed60404531bce6c0f5a64bfe1a6402a4cc2314816"
+                }
+            ],
+            "cleanup": [
+                "/bin",
+                "/lib/icu",
+                "/lib/libicutest.so*",
+                "/lib/libicutu.so*",
+                "/share/icu",
+                "/share/man"
+            ]
+        },
+        {
+            "name": "libbsd",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://libbsd.freedesktop.org/releases/libbsd-0.11.3.tar.xz",
+                    "sha256": "ff95cf8184151dacae4247832f8d4ea8800fa127dbd15033ecfe839f285b42a1",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 1567,
+                        "stable-only": true,
+                        "url-template": "https://libbsd.freedesktop.org/releases/libbsd-$version.tar.xz"
+                    }
+                }
+            ],
+            "cleanup": [
+                "/share/man"
+            ],
+            "modules": [
+                {
+                    "name": "libmd",
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://libbsd.freedesktop.org/releases/libmd-1.0.4.tar.xz",
+                            "sha256": "f51c921042e34beddeded4b75557656559cf5b1f2448033b4c1eec11c07e530f",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 15525,
+                                "stable-only": true,
+                                "url-template": "https://libbsd.freedesktop.org/releases/libmd-$version.tar.xz"
+                            }
+                        }
+                    ],
+                    "cleanup": [
+                        "/share/man"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "libuuid",
+            "config-opts": [
+                "--disable-all-programs",
+                "--enable-libuuid"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://www.kernel.org/pub/linux/utils/util-linux/v2.38/util-linux-2.38.tar.xz",
+                    "sha256": "6d111cbe4d55b336db2f1fbeffbc65b89908704c01136371d32aa9bec373eb64"
+                }
+            ],
+            "cleanup": [
+                "/sbin"
+            ]
+        },
+        {
+            "name": "patchelf",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/NixOS/patchelf/archive/0.14.3.tar.gz",
+                    "sha256": "827a8ca914c69413f1ca0d967a637980a24edf000a938531a77e663317c853bb",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 2598,
+                        "stable-only": true,
+                        "url-template": "https://github.com/NixOS/patchelf/archive/$version.tar.gz"
+                    }
+                }
+            ],
+            "cleanup": [
+                "*"
+            ]
+        },
         {
             "name": "poweriso",
             "buildsystem": "simple",
             "build-commands": [
-                "mkdir /app/lib/",
-                "cp -r ./gui/ /app/lib/poweriso/",
-                "mkdir -p /app/bin/",
-                "install -m755 launcher.sh /app/bin/poweriso-gui",
-                "install -m755 cli/poweriso /app/bin/poweriso",
-                "install -Dm644 com.poweriso.PowerISO.png /app/share/icons/com.poweriso.PowerISO.png",
-                "install -Dm644 com.poweriso.PowerISO.desktop /app/share/applications/com.poweriso.PowerISO.desktop",
-                "install -Dm644 com.poweriso.PowerISO.metainfo.xml /app/share/metainfo/com.poweriso.PowerISO.metainfo.xml"
+                "patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 gui/poweriso",
+                "install -Dm755 gui/lib{Qt5*,qxcb}.so* -t ${FLATPAK_DEST}/lib/",
+                "install -Dm755 gui/poweriso ${FLATPAK_DEST}/bin/poweriso-gui",
+                "install -Dm755 cli/poweriso -t ${FLATPAK_DEST}/bin/",
+                "install -Dm644 ${FLATPAK_ID}.png -t ${FLATPAK_DEST}/share/icons/",
+                "install -Dm644 ${FLATPAK_ID}.desktop -t ${FLATPAK_DEST}/share/applications/",
+                "install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/"
             ],
             "sources": [
                 {
                     "type": "archive",
                     "url": "https://www.poweriso.com/poweriso-x64-1.1.tar.gz",
                     "sha256": "d30cbf69b6b3f65241b909e7e26acba133993f440f3dbdf86f362889108aab44",
-                    "dest": "gui"
+                    "dest": "gui",
+                    "x-checker-data": {
+                        "is-main-source": true,
+                        "type": "html",
+                        "url": "https://www.poweriso.com/download-poweriso-for-linux.htm",
+                        "version-pattern": "PowerISO for Linux v([\\d\\.-]*) \\(64 bit edition\\)",
+                        "url-template": "https://www.poweriso.com/poweriso-x64-$version.tar.gz"
+                    }
                 },
                 {
                     "type": "archive",
                     "url": "https://www.poweriso.com/poweriso-1.5.tar.gz",
                     "sha256": "1893189e0c8b77da179df64a64cf8e62c4216684d1ab262867c6c96faae64ee2",
                     "strip-components": 0,
-                    "dest": "cli"
+                    "dest": "cli",
+                    "x-checker-data": {
+                        "is-important": true,
+                        "type": "html",
+                        "url": "https://www.poweriso.com/download-poweriso-command-line-utility-for-linux.htm",
+                        "version-pattern": "\\(v([\\d\\.-]*), File size:",
+                        "url-template": "https://www.poweriso.com/poweriso-$version.tar.gz"
+                    }
                 },
                 {
                     "type": "file",
@@ -50,10 +175,6 @@
                 {
                     "type": "file",
                     "path": "com.poweriso.PowerISO.desktop"
-                },
-                {
-                    "type": "file",
-                    "path": "launcher.sh"
                 }
             ]
         }
