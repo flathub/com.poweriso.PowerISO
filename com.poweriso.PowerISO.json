@@ -10,6 +10,7 @@
         "--env=QT_QPA_PLATFORM_PLUGIN_PATH=/app/lib",
         "--unset-env=QT_QPA_PLATFORM",
         "--socket=x11",
+        "--share=ipc",
         "--filesystem=home"
     ],
     "cleanup": [
