@@ -1,7 +1,7 @@
 {
     "app-id": "com.poweriso.PowerISO",
     "runtime": "org.freedesktop.Platform",
-    "runtime-version": "22.08",
+    "runtime-version": "23.08",
     "sdk": "org.freedesktop.Sdk",
     "command": "poweriso-gui",
     "finish-args": [
@@ -10,6 +10,7 @@
         "--env=QT_QPA_PLATFORM_PLUGIN_PATH=/app/lib",
         "--unset-env=QT_QPA_PLATFORM",
         "--socket=x11",
+        "--share=ipc",
         "--filesystem=home"
     ],
     "cleanup": [
@@ -131,7 +132,7 @@
                 "install -Dm755 gui/lib{Qt5*,qxcb}.so* -t ${FLATPAK_DEST}/lib/",
                 "install -Dm755 gui/poweriso ${FLATPAK_DEST}/bin/poweriso-gui",
                 "install -Dm755 cli/poweriso -t ${FLATPAK_DEST}/bin/",
-                "install -Dm644 ${FLATPAK_ID}.png -t ${FLATPAK_DEST}/share/icons/",
+                "install -Dm644 ${FLATPAK_ID}.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/",
                 "install -Dm644 ${FLATPAK_ID}.desktop -t ${FLATPAK_DEST}/share/applications/",
                 "install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/"
             ],
@@ -139,7 +140,9 @@
                 {
                     "type": "archive",
                     "url": "https://www.poweriso.com/poweriso-x64-1.1.tar.gz",
-                    "sha256": "d30cbf69b6b3f65241b909e7e26acba133993f440f3dbdf86f362889108aab44",
+                    "sha256": "68d5784da6dc68ce9a0fdaccdd9f05ec9b81a781054a3b00b19dc6daba1526a3",
+                    "disable-http-decompression": true,
+                    "archive-type": "tar",
                     "dest": "gui",
                     "x-checker-data": {
                         "is-main-source": true,
@@ -152,7 +155,9 @@
                 {
                     "type": "archive",
                     "url": "https://www.poweriso.com/poweriso-1.6.tar.gz",
-                    "sha256": "6364e4b5cb5fe75dd32f27703daf694f31d72344993b6a44e33c94c8f14c625b",
+                    "sha256": "015727a3f57d0cb594f11e916c00c5c5c7be725f2d0586e03d89c10d83580ba4",
+                    "disable-http-decompression": true,
+                    "archive-type": "tar",
                     "strip-components": 0,
                     "dest": "cli",
                     "x-checker-data": {
