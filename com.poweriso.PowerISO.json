@@ -132,7 +132,7 @@
                 "install -Dm755 gui/lib{Qt5*,qxcb}.so* -t ${FLATPAK_DEST}/lib/",
                 "install -Dm755 gui/poweriso ${FLATPAK_DEST}/bin/poweriso-gui",
                 "install -Dm755 cli/poweriso -t ${FLATPAK_DEST}/bin/",
-                "install -Dm644 ${FLATPAK_ID}.png -t ${FLATPAK_DEST}/share/icons/",
+                "install -Dm644 ${FLATPAK_ID}.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/",
                 "install -Dm644 ${FLATPAK_ID}.desktop -t ${FLATPAK_DEST}/share/applications/",
                 "install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/"
             ],
