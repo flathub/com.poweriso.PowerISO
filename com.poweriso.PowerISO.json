@@ -1,7 +1,7 @@
 {
     "app-id": "com.poweriso.PowerISO",
     "runtime": "org.freedesktop.Platform",
-    "runtime-version": "23.08",
+    "runtime-version": "25.08",
     "sdk": "org.freedesktop.Sdk",
     "command": "poweriso-gui",
     "finish-args": [
@@ -140,7 +140,7 @@
                 {
                     "type": "archive",
                     "url": "https://www.poweriso.com/poweriso-x64-1.1.tar.gz",
-                    "sha256": "68d5784da6dc68ce9a0fdaccdd9f05ec9b81a781054a3b00b19dc6daba1526a3",
+                    "sha256": "d30cbf69b6b3f65241b909e7e26acba133993f440f3dbdf86f362889108aab44",
                     "disable-http-decompression": true,
                     "archive-type": "tar",
                     "dest": "gui",
@@ -155,7 +155,7 @@
                 {
                     "type": "archive",
                     "url": "https://www.poweriso.com/poweriso-1.6.tar.gz",
-                    "sha256": "015727a3f57d0cb594f11e916c00c5c5c7be725f2d0586e03d89c10d83580ba4",
+                    "sha256": "6364e4b5cb5fe75dd32f27703daf694f31d72344993b6a44e33c94c8f14c625b",
                     "disable-http-decompression": true,
                     "archive-type": "tar",
                     "strip-components": 0,
