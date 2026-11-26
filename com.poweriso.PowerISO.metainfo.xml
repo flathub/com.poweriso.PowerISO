@@ -17,7 +17,7 @@
     </screenshot>
   </screenshots>
   <metadata_license>CC0-1.0</metadata_license>
-  <project_license>LicenseRef-proprietary=Freeware</project_license>
+  <project_license>LicenseRef-proprietary=https://raw.githubusercontent.com/flathub/com.poweriso.PowerISO/refs/heads/master/PowerISO-license.pdf</project_license>
   <developer_name>PowerISO</developer_name>
   <url type="homepage">https://www.poweriso.com/download-poweriso-for-linux.htm</url>
   <content_rating type="oars-1.1" />
