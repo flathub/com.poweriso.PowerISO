@@ -1,0 +1,129 @@
+app-id: com.poweriso.PowerISO
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+command: poweriso-gui
+finish-args:
+  - --allow=multiarch
+  - --device=all
+  - --env=QT_QPA_PLATFORM_PLUGIN_PATH=/app/lib
+  - --unset-env=QT_QPA_PLATFORM
+  - --socket=x11
+  - --share=ipc
+  - --filesystem=home
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - '*.a'
+  - '*.la'
+modules:
+  - name: icu
+    subdir: source
+    config-opts:
+      - --sbindir=${FLATPAK_DEST}/bin
+      - --disable-extras
+      - --disable-icuio
+      - --disable-layout
+      - --disable-layoutx
+      - --disable-tests
+      - --disable-samples
+    sources:
+      - type: archive
+        url: https://github.com/unicode-org/icu/releases/download/release-56-1/icu4c-56_1-src.tgz
+        sha256: 3a64e9105c734dcf631c0b3ed60404531bce6c0f5a64bfe1a6402a4cc2314816
+    cleanup:
+      - /bin
+      - /lib/icu
+      - /lib/libicutest.so*
+      - /lib/libicutu.so*
+      - /share/icu
+      - /share/man
+  - name: libbsd
+    sources:
+      - type: archive
+        url: https://libbsd.freedesktop.org/releases/libbsd-0.11.6.tar.xz
+        sha256: 19b38f3172eaf693e6e1c68714636190c7e48851e45224d720b3b5bc0499b5df
+        x-checker-data:
+          type: anitya
+          project-id: 1567
+          stable-only: true
+          url-template: https://libbsd.freedesktop.org/releases/libbsd-$version.tar.xz
+    cleanup:
+      - /share/man
+    modules:
+      - name: libmd
+        sources:
+          - type: archive
+            url: https://libbsd.freedesktop.org/releases/libmd-1.0.4.tar.xz
+            sha256: f51c921042e34beddeded4b75557656559cf5b1f2448033b4c1eec11c07e530f
+            x-checker-data:
+              type: anitya
+              project-id: 15525
+              stable-only: true
+              url-template: https://libbsd.freedesktop.org/releases/libmd-$version.tar.xz
+        cleanup:
+          - /share/man
+  - name: libuuid
+    config-opts:
+      - --disable-all-programs
+      - --enable-libuuid
+    sources:
+      - type: archive
+        url: https://www.kernel.org/pub/linux/utils/util-linux/v2.38/util-linux-2.38.tar.xz
+        sha256: 6d111cbe4d55b336db2f1fbeffbc65b89908704c01136371d32aa9bec373eb64
+    cleanup:
+      - /sbin
+  - name: patchelf
+    sources:
+      - type: archive
+        url: https://github.com/NixOS/patchelf/archive/0.15.0.tar.gz
+        sha256: 5d1eda9bad4439bb9c0a87fcba198d7c0d372f361e77de41d68d6308062e5000
+        x-checker-data:
+          type: anitya
+          project-id: 2598
+          stable-only: true
+          url-template: https://github.com/NixOS/patchelf/archive/$version.tar.gz
+    cleanup:
+      - '*'
+  - name: poweriso
+    buildsystem: simple
+    build-commands:
+      - patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 gui/poweriso
+      - install -Dm755 gui/lib{Qt5*,qxcb}.so* -t ${FLATPAK_DEST}/lib/
+      - install -Dm755 gui/poweriso ${FLATPAK_DEST}/bin/poweriso-gui
+      - install -Dm755 cli/poweriso -t ${FLATPAK_DEST}/bin/
+      - install -Dm644 ${FLATPAK_ID}.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/
+      - install -Dm644 ${FLATPAK_ID}.desktop -t ${FLATPAK_DEST}/share/applications/
+      - install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/
+    sources:
+      - type: archive
+        url: https://www.poweriso.com/poweriso-x64-1.1.tar.gz
+        sha256: d30cbf69b6b3f65241b909e7e26acba133993f440f3dbdf86f362889108aab44
+        disable-http-decompression: true
+        archive-type: tar
+        dest: gui
+        x-checker-data:
+          is-main-source: true
+          type: html
+          url: https://www.poweriso.com/download-poweriso-for-linux.htm
+          version-pattern: PowerISO for Linux v([\d\.-]*) \(64 bit edition\)
+          url-template: https://www.poweriso.com/poweriso-x64-$version.tar.gz
+      - type: archive
+        url: https://www.poweriso.com/poweriso-1.6.tar.gz
+        sha256: 6364e4b5cb5fe75dd32f27703daf694f31d72344993b6a44e33c94c8f14c625b
+        disable-http-decompression: true
+        archive-type: tar
+        strip-components: 0
+        dest: cli
+        x-checker-data:
+          is-important: true
+          type: html
+          url: https://www.poweriso.com/download-poweriso-command-line-utility-for-linux.htm
+          version-pattern: '\(v([\d\.-]*), File size:'
+          url-template: https://www.poweriso.com/poweriso-$version.tar.gz
+      - type: file
+        path: com.poweriso.PowerISO.metainfo.xml
+      - type: file
+        path: com.poweriso.PowerISO.png
+      - type: file
+        path: com.poweriso.PowerISO.desktop
